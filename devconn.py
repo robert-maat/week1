@@ -1,10 +1,17 @@
+#!/
+import yaml
 import os
 from netmiko import ConnectHandler
 from getpass import getpass
+from pprint import pprint
 
 homedir = os.path.expanduser('~')
-filename = ".cred" 
+filename = ".cred"
+yamlfilename = ".netmiko.yml"
+
+
 credfile = homedir + "/" + filename
+yamlfile = homedir + "/" + yamlfilename
 
 with open(credfile) as f:
     cred = f.read()
@@ -12,6 +19,21 @@ with open(credfile) as f:
 username, password = cred.split(":")
 username = username.strip()
 password = password.strip()
+
+with open(yamlfile) as yf:
+    yamldevices = yaml.load(yf)
+
+#pprint(yamldevices)
+#print(type(yamldevices["nxos"]))
+
+pprint(yamldevices["nxos"])
+
+
+for ydevice in yamldevices["nxos"]:
+    conDev = ConnectHandler(**yamldevices[ydevice])
+    print(conDev.find_prompt())
+
+exit()
 
 nxos1 = {
     "device_type": "cisco_nxos",
@@ -29,11 +51,10 @@ nxos2 = {
     "port": "22",
 }
 
-conDev = ConnectHandler(**nxos1)
-print(conDev.find_prompt())
+devices = [nxos1, nxos2]
 
-
-conDev = ConnectHandler(**nxos2)
-print(conDev.find_prompt())
+for device in devices:
+    conDev = ConnectHandler(**device)
+    print(conDev.find_prompt())
 
 
