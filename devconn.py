@@ -21,11 +21,19 @@ nxos1 = {
     "port": "22",
 }
 
-conDev = ConnectHandler(**nxos1)
+nxos2 = {
+    "device_type": "cisco_nxos",
+    "host": "nxos2.lasthop.io",
+    "username": username, 
+    "password": password, 
+    "port": "22",
+}
 
+conDev = ConnectHandler(**nxos1)
 print(conDev.find_prompt())
 
 
-
+conDev = ConnectHandler(**nxos2)
+print(conDev.find_prompt())
 
 
